@@ -13,6 +13,10 @@ import { User, UserModel } from './User.entity';
 
 @Resolver(_of => User)
 export class UserResolver {
+  constructor() {
+
+  }
+  
   @Query(_returns => User, { nullable: true })
   async user(@Arg('userId', _type => ObjectIdScalar) userId: ObjectID) {
     return UserModel.findById(userId);

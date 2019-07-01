@@ -1,12 +1,12 @@
 /*
- * 
- * 
  *
- * 
+ *
+ *
+ *
  */
 
 import 'reflect-metadata';
-import * as path from "path";
+import * as path from 'path';
 
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
@@ -16,6 +16,7 @@ import { db } from '@config/database';
 import { ObjectId } from 'bson';
 import { ObjectIdScalar } from '@common/object-id.scalar';
 import { TypegooseMiddleware } from '@common/TypegooseMiddleware';
+import { log } from '@config/logger';
 
 import { UserResolver } from './src/user/UserResolver';
 import { User } from './src/user/User.entity';
@@ -25,15 +26,24 @@ export interface UserContext {
 }
 
 async function getSchema() {
-  return TypeGraphQL.buildSchema({
-    resolvers: [UserResolver],
-    // use document converting middleware
-    globalMiddlewares: [TypegooseMiddleware],
-    emitSchemaFile: path.resolve(__dirname, "schema.graphql"),
+  log.debug('Inside get Schema');
+  try {
+    return await TypeGraphQL.buildSchema({
+      resolvers: [UserResolver],
+      // use document converting middleware
+      globalMiddlewares: [TypegooseMiddleware],
+      emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
 
-    // use ObjectId scalar mapping
-    scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
-  });
+      // use ObjectId scalar mapping
+      scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
+    });
+  } catch (e) {
+    log.debug('Error at get Schema');
+    log.error(`Error occured while boostrapping: , ${JSON.stringify(e, null, 2)}`);
+    throw e;
+  } finally {
+    log.debug('Finish get Schema');
+  }
 }
 
 async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>) {
@@ -44,10 +54,12 @@ async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback
     (global as any).TypeGraphQLMetadataStorage!.clear();
   }
 
-  const schema = await getSchema();
+  log.debug('About to generate schema: ');
+  (global as any).schema = (global as any).schema || (await getSchema());
+  const schema = (global as any).schema;
 
-  console.log('Schema: ', JSON.stringify(schema, null, 2));
-  console.log('User Type: ', JSON.stringify(schema.getQueryType(), null, 2));
+  log.debug('Schema: ', JSON.stringify(schema, null, 2));
+  log.debug('User Type: ', JSON.stringify(schema.getQueryType(), null, 2));
 
   const server = new ApolloServer({ schema });
   server.createHandler({ cors: { origin: process.env.CORS_ORIGIN } })(event, context, callback);
@@ -57,7 +69,7 @@ export function graphql(event: APIGatewayProxyEvent, context: Context, callback:
   try {
     bootstrap(event, context, callback);
   } catch (e) {
-    console.log('Error occured while boostrapping: ', JSON.stringify(e));
+    log.error('Error occured while boostrapping: ', JSON.stringify(e));
   }
 }
 

@@ -37,6 +37,11 @@ module.exports = {
         loader: 'pug-loader',
         options: { root: srcPath('src/constants/email-templates') },
       },
+      {
+        type: 'javascript/auto', // required for the apollo-graphql
+        test: /\.mjs$/,
+        use: [],
+      },
     ],
   },
 };

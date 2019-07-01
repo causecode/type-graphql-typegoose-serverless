@@ -10,7 +10,7 @@
     "test": "jest --runInBand --forceExit --detectOpenHandles",
     "clean": "rm -rf .compiled .serverless",
     "lint": "eslint --fix 'src/**/*.{tsx,ts,js}'",
-    "start": "env-cmd --fallback ./stages/local.env sh -c 'sls offline --useSeparateProcesses -o 0.0.0.0'",
+    "start": "env-cmd --fallback ./stages/local.env sh -c 'sls offline --skipCacheInvalidation --useSeparateProcesses -o 0.0.0.0'",
     "git-cz": "cd ../../ && npx git-cz"
   },
   "_moduleAliases": {
