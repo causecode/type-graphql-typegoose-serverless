@@ -1,0 +1,17 @@
+S3BucketUserPhotos:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: ${self:provider.environment.S3_IMAGE_BUCKET_NAME}
+    AccessControl: PublicRead
+    CorsConfiguration:
+      CorsRules:
+        -
+          AllowedHeaders:
+            - Authorization
+            - 'Content-Type'
+          AllowedOrigins:
+            - '*'
+          AllowedMethods:
+            - GET
+            - PUT
+          MaxAge: 3000

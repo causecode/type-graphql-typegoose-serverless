@@ -1,0 +1,28 @@
+{
+  "exclude": ["node_modules", "build", "webpack", "coverage"],
+  "compilerOptions": {
+    "noUnusedLocals": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "preserveConstEnums": true,
+    "forceConsistentCasingInFileNames": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "module": "commonjs",
+    "lib": ["es2016", "esnext.asynciterable"],
+    "target": "es2016",
+    "outDir": ".compiled",
+    "rootDir": ".",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "types": ["node", "jest"]
+  },
+  "files": [],
+  "references": [{ "path": "packages/server" }, { "path": "packages/web" }]
+}

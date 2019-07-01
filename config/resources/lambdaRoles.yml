@@ -1,0 +1,98 @@
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html
+
+LambdaRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: typegrahql-${opt:stage, "dev"}-${env:REGION, "us-east-2"}-lambdaRole
+    AssumeRolePolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              - lambda.amazonaws.com
+          Action: sts:AssumeRole
+    Policies:
+      - PolicyName: typegrahql-${opt:stage, "dev"}-${env:REGION, "us-east-2"}-LambdaPutBucketNotificationPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - "s3:PutBucketNotification"
+              Resource:
+                - '*'
+    ManagedPolicyArns:
+      - Ref: CloudWatchPolicy
+      - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+      - arn:aws:iam::aws:policy/AmazonVPCFullAccess
+
+FileParserRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: typegrahql-${opt:stage, "dev"}-${env:REGION, "us-east-2"}-fileParserRole
+    AssumeRolePolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              - lambda.amazonaws.com
+          Action: sts:AssumeRole
+    ManagedPolicyArns:
+      - Ref: SESMailingPolicy
+      - Ref: CloudWatchPolicy
+      - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+      - arn:aws:iam::aws:policy/AmazonVPCFullAccess
+
+S3PutAccessRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: typegrahql-${opt:stage, "dev"}-${env:REGION, "us-east-2"}-S3PutAccessRole
+    AssumeRolePolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              - lambda.amazonaws.com
+          Action: sts:AssumeRole
+    ManagedPolicyArns:
+      - Ref: CloudWatchPolicy
+      - Ref: S3PutAccessPolicy
+      - arn:aws:iam::aws:policy/AmazonVPCFullAccess
+
+# Managed Policies (for reusability):
+
+CloudWatchPolicy:
+  Type: AWS::IAM::ManagedPolicy
+  Properties:
+    PolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: 'Allow'
+          Action:
+            - 'logs:PutLogEvents'
+            - 'logs:CreateLogGroup'
+            - 'logs:CreateLogStream'
+          Resource:
+            # The * is needed as we want the permission to write to all
+            # log streams, since this role is shared among functions
+            - '*'
+    ManagedPolicyName: typegrahql-serverless-${opt:stage, "dev"}-${env:REGION, "us-east-2"}-cloudWatchPolicy
+
+SESMailingPolicy:
+  Type: AWS::IAM::ManagedPolicy
+  Properties:
+    PolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: 'Allow'
+          Action:
+            - 'ses:SendEmail'
+            - 'ses:SendRawEmail'
+          Resource:
+            # The resource * is a dummy resource needed to satisfy CloudFormation
+            # constraints. SES policies don't need a resource specified
+            - '*'
+    ManagedPolicyName: typegrahql-serverless-${opt:stage, "dev"}-${env:REGION, "us-east-2"}-sesMailingPolicy

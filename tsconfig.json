@@ -1,0 +1,18 @@
+{
+  "files": ["./handler.ts"],
+  "extends": "./root-tsconfig.json",
+  "include": ["./**/*.ts"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "typeRoots": ["node_modules/@types"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "*": ["node_modules/@types/*", "./src/types/*"],
+      "@common/*": ["src/common/*"],
+      "@config/*": ["config/*"]
+    }
+  }
+}

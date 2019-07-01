@@ -1,0 +1,54 @@
+custom:
+    webpack:
+        includeModules: true
+
+service:
+    name: typegrahql
+
+plugins:
+    - serverless-webpack
+    - serverless-plugin-existing-s3
+    - serverless-offline # This should be the last in the list
+
+provider:
+    name: aws
+    region: ${env:REGION, "us-east-2"}
+    profile: ${env:PROFILE, "typegrahql"}
+    runtime: nodejs8.10
+    memorySize: 512 # optional, in MB, default is 1024
+    role: LambdaRole
+    versionFunctions: false
+    environment:
+        GRAPHQL_API_PATH: "/api"
+        CORS_ORIGIN: ${env:CORS_ORIGIN}
+        DBURL: ${env:DBURL}
+        LOG_LEVEL: ${env:LOG_LEVEL}
+        JWT_AUTH_SECRET: ${env:JWT_AUTH_SECRET}
+        PASSWORD_SALT: ${env:PASSWORD_SALT}
+        NODE_ENV: ${env:NODE_ENV}
+        IS_OFFLINE: ${env:IS_OFFLINE}
+        SES_EMAIL_SENDER: ${env:SES_EMAIL_SENDER}
+        NODEMAILER_TRANSPORT: ${env:NODEMAILER_TRANSPORT}
+        S3_IMAGE_BUCKET_NAME: ${opt:stage, "dev"}-avatar
+
+resources:
+  - Resources: ${file(./config/resources/buckets.yml)}
+  - Resources: ${file(./config/resources/lambdaRoles.yml)}
+
+functions:
+    graphQLAPI:
+        handler: handler.graphql
+        events:
+            - http:
+                method: post
+                path: "/api"
+                cors: true
+
+    # Not to be deployed on production
+    graphQLPlayground:
+        handler: handler.playgroundHandler
+        events:
+            - http:
+                method: get
+                path: "/playground"
+                cors: true

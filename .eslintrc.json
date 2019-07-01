@@ -1,0 +1,105 @@
+{
+  "extends": [
+    "airbnb",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/react",
+    "prettier/@typescript-eslint"
+  ],
+  "env": {
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint/eslint-plugin", "prettier"],
+  "overrides": [
+    {
+      "files": "**/*.js",
+      "excludedFiles": "**/coverage/*.js"
+    }
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    "@typescript-eslint/member-naming": [
+      "error",
+      {
+        "private": "^__",
+        "protected": "^_"
+      }
+    ],
+    "indent": "off",
+    "@typescript-eslint/indent": 0,
+    "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/interface-name-prefix": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/explicit-member-access": 0,
+    "sort-keys": 0,
+    "no-console": 2,
+    "object-shorthand": ["error", "always"],
+    "react/prop-types": 0,
+    "react/destructuring-assignment": 0,
+    "import/no-unresolved": 0,
+    "import/first": 0,
+    "import/prefer-default-export": 0,
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          ["parent", "sibling", "internal", "index"]
+        ],
+        "newlines-between": "always"
+      }
+    ],
+    "react/jsx-filename-extension": 0,
+    "react/jsx-one-expression-per-line": 0,
+    "import/no-extraneous-dependencies": 0,
+    "no-shadow": 2,
+    "no-use-before-define": 2,
+    "no-await-in-loop": 2,
+    "no-template-curly-in-string": 2,
+    "array-callback-return": 2,
+    "block-scoped-var": 2,
+    "no-alert": 2,
+    "no-eval": 2,
+    "no-magic-numbers": 2,
+    "no-return-assign": 2,
+    "no-return-await": 2,
+    "no-throw-literal": 2,
+    "no-unmodified-loop-condition": 2,
+    "vars-on-top": 2,
+    "no-sequences": 2,
+    "max-lines-per-function": [
+      "error",
+      50
+    ],
+    "max-lines": [
+      "error",
+      {
+        "max": 300,
+        "skipBlankLines": true
+      }
+    ],
+    "complexity": [
+      "error",
+      5
+    ],
+    "max-params": [
+      "error",
+      4
+    ],
+    "max-depth": [
+      "error",
+      3
+    ]
+  },
+  "settings": { "react": { "version": "detect" } }
+}
