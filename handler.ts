@@ -9,7 +9,7 @@ import 'reflect-metadata';
 
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
-import { Context, APIGatewayProxyEvent, APIGatewayProxyResult, Callback } from 'aws-lambda';
+import { Context, APIGatewayProxyEvent, APIGatewayProxyResult, Callback, APIGatewayEvent } from 'aws-lambda';
 import * as TypeGraphQL from 'type-graphql';
 import { db } from '@config/database';
 import { ObjectId } from 'mongodb';
@@ -47,8 +47,7 @@ async function getSchema() {
 }
 
 async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>) {
-  const connection = db;
-  connection.eventNames;
+  await db();
   
   log.debug('About to generate schema: ');
   (global as any).schema = (global as any).schema || (await getSchema());
@@ -57,7 +56,13 @@ async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback
   log.debug('Schema: ', JSON.stringify(schema, null, 2));
   log.debug('User Type: ', JSON.stringify(schema.getQueryType(), null, 2));
 
-  const server = new ApolloServer({ schema });
+  const server = new ApolloServer({ schema,
+    context: async ({ context }: { event: APIGatewayEvent; context: Context }) => {
+      context.callbackWaitsForEmptyEventLoop = false;
+      return { auth: { isAuthenticated: false } };
+    },
+  
+  });
   server.createHandler({ cors: { origin: process.env.CORS_ORIGIN } })(event, context, callback);
 }
 

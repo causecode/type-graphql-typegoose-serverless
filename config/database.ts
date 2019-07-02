@@ -11,17 +11,16 @@ import { log } from './logger';
 
 const dbConnectionURL = process.env.DBURL as string;
 
-let connection;
 let isPreviousConnectionAvailable = false;
 
-export const db = (() => {
+export const db = (async () => {
   if (!isPreviousConnectionAvailable) {
-    log.debug('=> Creating a new database connection.');
-    connection = mongoose.createConnection(dbConnectionURL, { useNewUrlParser: true });
+    log.debug(`=> Creating a new database connection: ${dbConnectionURL}`);
+     const connection = await mongoose.createConnection(dbConnectionURL, { useNewUrlParser: true });
     isPreviousConnectionAvailable = true;
+    return connection;
   } else {
     log.debug('=> Reusing an existing database connection');
   }
-
-  return connection as mongoose.Connection;
-})();
+  return mongoose.connection;
+});
