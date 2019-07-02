@@ -1,6 +1,7 @@
 import { prop as Property, Typegoose } from 'typegoose';
 import { ObjectId } from 'mongodb';
 import { ObjectType, Field } from 'type-graphql';
+import mongoose from 'mongoose';
 
 @ObjectType()
 export class User extends Typegoose {
@@ -24,5 +25,6 @@ export class User extends Typegoose {
 }
 
 export const UserModel = new User().getModelForClass(User, {
+  existingMongoose: mongoose,
   schemaOptions: { timestamps: true, collection: 'user' },
 });

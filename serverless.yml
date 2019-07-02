@@ -7,7 +7,6 @@ service:
 
 plugins:
     - serverless-webpack
-    - serverless-plugin-existing-s3
     - serverless-offline # This should be the last in the list
 
 provider:
@@ -31,9 +30,6 @@ provider:
         NODEMAILER_TRANSPORT: ${env:NODEMAILER_TRANSPORT}
         S3_IMAGE_BUCKET_NAME: ${opt:stage, "dev"}-avatar
 
-resources:
-  - Resources: ${file(./config/resources/buckets.yml)}
-  - Resources: ${file(./config/resources/lambdaRoles.yml)}
 
 functions:
     graphQLAPI:
