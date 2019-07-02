@@ -16,19 +16,14 @@ import { ObjectId } from 'mongodb';
 import { ObjectIdScalar } from '@common/object-id.scalar';
 import { TypegooseMiddleware } from '@common/TypegooseMiddleware';
 import { log } from '@config/logger';
-
-import { UserResolver } from './src/user/UserResolver';
-import { User } from './src/user/User.entity';
-
-export interface UserContext {
-  user: User;
-}
+import { RecipeResolver } from './src/resolvers/recipe-resolver';
+import { RateResolver } from './src/resolvers/rate-resolver';
 
 async function getSchema() {
   log.debug('Inside get Schema');
   try {
     return await TypeGraphQL.buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [RecipeResolver, RateResolver],
       // use document converting middleware
       globalMiddlewares: [TypegooseMiddleware],
       // emitSchemaFile: path.resolve(__dirname, 'schema.graphql'), for some reason specifying path fails
