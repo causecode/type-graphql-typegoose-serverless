@@ -13,7 +13,7 @@ import { ApolloServer } from 'apollo-server-lambda';
 import { Context, APIGatewayProxyEvent, APIGatewayProxyResult, Callback } from 'aws-lambda';
 import * as TypeGraphQL from 'type-graphql';
 import { db } from '@config/database';
-import { ObjectId } from 'bson';
+import { ObjectId } from 'mongodb';
 import { ObjectIdScalar } from '@common/object-id.scalar';
 import { TypegooseMiddleware } from '@common/TypegooseMiddleware';
 import { log } from '@config/logger';
@@ -32,8 +32,9 @@ async function getSchema() {
       resolvers: [UserResolver],
       // use document converting middleware
       globalMiddlewares: [TypegooseMiddleware],
-      emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
+      // emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
 
+      emitSchemaFile: {},
       // use ObjectId scalar mapping
       scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
     });
@@ -49,11 +50,7 @@ async function getSchema() {
 async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>) {
   const connection = db;
   connection.eventNames;
-  // build TypeGraphQL executable schema
-  if (process.env.IS_OFFLINE) {
-    (global as any).TypeGraphQLMetadataStorage!.clear();
-  }
-
+  
   log.debug('About to generate schema: ');
   (global as any).schema = (global as any).schema || (await getSchema());
   const schema = (global as any).schema;
