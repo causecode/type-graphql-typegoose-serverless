@@ -10,6 +10,9 @@ import { ObjectIdScalar } from '@common/object-id.scalar';
 import { ObjectID } from 'bson';
 
 import { User, UserModel } from './User.entity';
+import { log } from '@config/logger';
+import mongoose from 'mongoose';
+import { promisify } from 'util';
 
 @Resolver(_of => User)
 export class UserResolver {
@@ -23,8 +26,20 @@ export class UserResolver {
   }
 
   @Query(_returns => [User], { nullable: true })
-  async users() {
-    return await UserModel.find({});
+  async users(): Promise<User[]>{
+         
+    log.debug(`Fetching users from the database. Models: ${JSON.stringify(mongoose.connection.modelNames())}`);
+    try {
+      
+      const users = await UserModel.find({});
+      log.debug(`Users from the database: ${JSON.stringify(users)}`)
+      return users;
+    } catch(e) {
+      log.debug(`Database Error: ${JSON.stringify(e)}`);
+      return [];
+    } finally {
+      log.debug(`Finishing up call to the database`);
+    }
   }
 
   @Query(() => String)
