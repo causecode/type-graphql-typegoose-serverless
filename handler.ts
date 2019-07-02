@@ -6,7 +6,6 @@
  */
 
 import 'reflect-metadata';
-import * as path from 'path';
 
 import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
@@ -32,7 +31,7 @@ async function getSchema() {
       resolvers: [UserResolver],
       // use document converting middleware
       globalMiddlewares: [TypegooseMiddleware],
-      // emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
+      // emitSchemaFile: path.resolve(__dirname, 'schema.graphql'), for some reason specifying path fails
 
       emitSchemaFile: {},
       // use ObjectId scalar mapping

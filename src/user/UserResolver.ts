@@ -19,12 +19,18 @@ export class UserResolver {
   
   @Query(_returns => User, { nullable: true })
   async user(@Arg('userId', _type => ObjectIdScalar) userId: ObjectID) {
-    return UserModel.findById(userId);
+    return await UserModel.findById(userId);
   }
 
-  @Query(_returns => User, { nullable: true })
+  @Query(_returns => [User], { nullable: true })
   async users() {
-    return UserModel.find({});
+    return await UserModel.find({});
+  }
+
+  @Query(() => String)
+  async hello() {
+  
+    return '1 + 1 = 2';
   }
 
   @Mutation(_returns => User)
