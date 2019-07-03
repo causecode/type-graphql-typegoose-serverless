@@ -11,7 +11,7 @@ import lambdaPlayground from 'graphql-playground-middleware-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
 import { Context, APIGatewayProxyEvent, APIGatewayProxyResult, Callback, APIGatewayEvent } from 'aws-lambda';
 import * as TypeGraphQL from 'type-graphql';
-import { db } from '@config/database';
+import { getConnection } from '@config/database';
 import { ObjectId } from 'mongodb';
 import { ObjectIdScalar } from '@common/object-id.scalar';
 import { TypegooseMiddleware } from '@common/TypegooseMiddleware';
@@ -41,9 +41,9 @@ async function getSchema() {
   }
 }
 
-async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>) {
-  await db();
-  
+const createHandler = async () => {
+  await getConnection();
+
   log.debug('About to generate schema: ');
   (global as any).schema = (global as any).schema || (await getSchema());
   const schema = (global as any).schema;
@@ -51,22 +51,19 @@ async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback
   log.debug('Schema: ', JSON.stringify(schema, null, 2));
   log.debug('User Type: ', JSON.stringify(schema.getQueryType(), null, 2));
 
-  const server = new ApolloServer({ schema,
+  const server = new ApolloServer({
+    schema,
     context: async ({ context }: { event: APIGatewayEvent; context: Context }) => {
       context.callbackWaitsForEmptyEventLoop = false;
       return { auth: { isAuthenticated: false } };
     },
-  
-  });
-  server.createHandler({ cors: { origin: process.env.CORS_ORIGIN } })(event, context, callback);
-}
 
-export function graphql(event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>) {
-  try {
-    bootstrap(event, context, callback);
-  } catch (e) {
-    log.error('Error occured while boostrapping: ', JSON.stringify(e));
-  }
-}
+  });
+  return server.createHandler({ cors: { origin: process.env.CORS_ORIGIN } });
+};
+
+export const graphql = (event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>) => {
+  createHandler().then(handler => handler(event, context, callback));
+};
 
 export const playgroundHandler = lambdaPlayground({ endpoint: process.env.GRAPHQL_API_PATH });

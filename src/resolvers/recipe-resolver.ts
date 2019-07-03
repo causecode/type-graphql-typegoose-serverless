@@ -18,7 +18,7 @@ export class RecipeResolver {
 
   @Query(() => [Recipe])
   async recipes(): Promise<Recipe[]> {
-    return Promise.resolve(RecipeModel.find({}));
+    return await RecipeModel.find({});
   }
 
   @Mutation(() => Recipe)
