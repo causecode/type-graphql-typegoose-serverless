@@ -14,10 +14,10 @@ const dbConnectionURL = process.env.DBURL as string;
 
 let isPreviousConnectionAvailable = false;
 
-export const getConnection = (() => {
+export const getConnection = (async () => {
   if (!isPreviousConnectionAvailable) {
     log.debug(`=> Creating a new database connection: ${dbConnectionURL}`);
-     const connection = mongoose.createConnection(dbConnectionURL, { useNewUrlParser: true });
+    const connection = await mongoose.createConnection(dbConnectionURL, { useNewUrlParser: true });
     mongoose.set('debug', true);
     isPreviousConnectionAvailable = true;
     return connection;
@@ -27,8 +27,8 @@ export const getConnection = (() => {
   return mongoose.connection;
 });
 
-export function getModel<T extends Typegoose>(Model: new () => T) {
-  const connection = getConnection();
+export async function getModel<T extends Typegoose>(Model: new () => T) {
+  const connection = await getConnection();
   const DomainModel = new Model().getModelForClass(Model, {
     existingConnection: connection
   });

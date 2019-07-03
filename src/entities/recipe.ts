@@ -1,10 +1,11 @@
-import { prop as Property, arrayProp as ArrayProperty, Typegoose, Ref } from "typegoose";
+import { prop as Property, arrayProp as ArrayProperty, Typegoose, Ref, InstanceType } from "typegoose";
 import { ObjectId } from "mongodb";
 import { Field, ObjectType } from "type-graphql";
 
 import { Rate } from "./rate";
 import { User } from "./user";
-import { getModel } from "@config/database";
+import { getModel, getConnection } from "@config/database";
+import { Model } from "mongoose";
 
 @ObjectType()
 export class Recipe extends Typegoose {
@@ -28,4 +29,8 @@ export class Recipe extends Typegoose {
   author: Ref<User>;
 }
 
-export const RecipeModel = getModel(Recipe);
+export let RecipeModel: Model<InstanceType<Recipe>>;
+
+(async() => {
+  RecipeModel = await getModel(Recipe);
+})();
