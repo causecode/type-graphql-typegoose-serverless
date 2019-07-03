@@ -4,6 +4,7 @@ import { Field, ObjectType } from "type-graphql";
 
 import { Rate } from "./rate";
 import { User } from "./user";
+import { getModel } from "@config/database";
 
 @ObjectType()
 export class Recipe extends Typegoose {
@@ -27,4 +28,4 @@ export class Recipe extends Typegoose {
   author: Ref<User>;
 }
 
-export const RecipeModel = new Recipe().getModelForClass(Recipe);
+export const RecipeModel = getModel(Recipe);

@@ -42,7 +42,7 @@ async function getSchema() {
 }
 
 const createHandler = async () => {
-  await getConnection();
+  getConnection();
 
   log.debug('About to generate schema: ');
   (global as any).schema = (global as any).schema || (await getSchema());

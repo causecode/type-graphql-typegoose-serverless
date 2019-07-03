@@ -12,13 +12,15 @@ import { ObjectIdScalar } from "@common/object-id.scalar";
 @Resolver(() => Recipe)
 export class RecipeResolver {
   @Query(() => Recipe, { nullable: true })
-  recipe(@Arg("recipeId", () => ObjectIdScalar) recipeId: ObjectId) {
+  async recipe(@Arg("recipeId", () => ObjectIdScalar) recipeId: ObjectId) {
+    
     return RecipeModel.findById(recipeId);
   }
 
   @Query(() => [Recipe])
   async recipes(): Promise<Recipe[]> {
-    return await RecipeModel.find({});
+    
+    return RecipeModel.find({});  
   }
 
   @Mutation(() => Recipe)
@@ -26,6 +28,7 @@ export class RecipeResolver {
     @Arg("recipe") recipeInput: RecipeInput,
     @Ctx() { user }: Context,
   ): Promise<Recipe> {
+    
     const recipe = new RecipeModel({
       ...recipeInput,
       author: user._id,
@@ -37,6 +40,7 @@ export class RecipeResolver {
   @Mutation(() => Recipe)
   async rate(@Arg("rate") rateInput: RateInput, @Ctx() { user }: Context): Promise<Recipe> {
     // find the recipe
+    
     const recipe = await RecipeModel.findById(rateInput.recipeId);
     if (!recipe) {
       throw new Error("Invalid recipe ID");
