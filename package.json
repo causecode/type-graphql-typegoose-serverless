@@ -108,7 +108,7 @@
     "lodash": "4.17.11",
     "migrate-mongoose": "3.2.2",
     "mongodb-memory-server": "5.1.5",
-    "mongoose": "5.6.2",
+    "mongoose": "5.7.5",
     "mongoose-unique-validator": "2.0.1",
     "nodemailer": "6.2.1",
     "reflect-metadata": "0.1.13",
