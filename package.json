@@ -93,7 +93,7 @@
     "yargs": "13.2.4"
   },
   "dependencies": {
-    "apollo-server-lambda": "2.6.7",
+    "apollo-server-lambda": "2.14.2",
     "aws-lambda": "0.1.2",
     "basic-auth": "2.0.1",
     "bcryptjs": "2.4.3",
