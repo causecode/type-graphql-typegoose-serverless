@@ -115,7 +115,7 @@
     "rrule": "2.5.5",
     "semver": "6.0.0",
     "serverless-plugin-existing-s3": "2.4.0",
-    "type-graphql": "0.17.4",
+    "type-graphql": "0.17.6",
     "typegoose": "5.7.2",
     "typedi": "0.8.0",
     "tslib": "1.10.0",
