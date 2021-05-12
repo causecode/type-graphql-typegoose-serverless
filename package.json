@@ -110,7 +110,7 @@
     "mongodb-memory-server": "5.1.5",
     "mongoose": "5.6.2",
     "mongoose-unique-validator": "2.0.1",
-    "nodemailer": "6.2.1",
+    "nodemailer": "6.4.16",
     "reflect-metadata": "0.1.13",
     "rrule": "2.5.5",
     "semver": "6.0.0",
