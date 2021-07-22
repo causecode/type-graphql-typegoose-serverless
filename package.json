@@ -121,7 +121,7 @@
     "tslib": "1.10.0",
     "validator": "11.0.0",
     "winston": "3.2.1",
-    "xlsx": "0.14.3"
+    "xlsx": "0.17.0"
   },
   "jest": {
     "globals": {
