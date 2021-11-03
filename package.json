@@ -119,7 +119,7 @@
     "typegoose": "5.7.2",
     "typedi": "0.8.0",
     "tslib": "1.10.0",
-    "validator": "11.0.0",
+    "validator": "13.7.0",
     "winston": "3.2.1",
     "xlsx": "0.14.3"
   },
