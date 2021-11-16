@@ -54,7 +54,7 @@
     "@types/yargs": "13.0.0",
     "@typescript-eslint/eslint-plugin": "1.10.2",
     "@typescript-eslint/parser": "1.10.2",
-    "aws-sdk": "2.311.0",
+    "aws-sdk": "2.814.0",
     "babel-core": "7.0.0-bridge.0",
     "commitizen": "3.1.1",
     "cz-conventional-changelog": "2.1.0",
